@@ -174,7 +174,7 @@ layout: null
     {% assign flyer_files = site.static_files | where: 'flyer', true | sort: 'name' %}
     {% for flyer in flyer_files %}
       {% assign ext = flyer.extname | downcase %}
-      {% if ext == '.jpg' or ext == '.jpeg' %}
+      {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' %}
         <span data-src="{{ flyer.path | relative_url | escape }}" data-name="{{ flyer.basename | escape }}"></span>
       {% endif %}
     {% endfor %}
