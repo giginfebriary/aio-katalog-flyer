@@ -4,281 +4,226 @@ layout: null
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#132c2d">
-  <meta name="description" content="Buka katalog digital AIO Store seperti buku, geser halaman, perbesar flyer dan bagikan lewat WhatsApp.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Katalog Promo AIO Store | Flipbook Digital">
-  <meta property="og:description" content="Buka katalog AIO Store. Geser tiap halaman untuk melihat flyer promo elektronik.">
-  <meta property="og:image" content="{{ '/assets/preview-wa.jpg' | absolute_url }}">
-  <meta name="twitter:card" content="summary_large_image">
-  <title>Katalog Digital AIO Store | Flipbook</title>
-  <style>
-    :root { --ink:#172d2d; --muted:#657474; --accent:#b6d1a7; --paper:#fffefb; --cream:#f5f2eb; --outline:#dce5dd; --black:#142a2a; }
-    *,*::before,*::after {box-sizing:border-box}
-    html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(ellipse at 50% 10%,#fafff9 0%,#f2f3ed 45%,#e8eee8 100%); color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; min-height:100vh}
-    button,a{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.4}
-    .site-header{display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:auto;padding:20px 28px 12px;gap:12px}
-    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);font-weight:900;letter-spacing:-.04em;font-size:22px}
-    .brand-mark{height:38px;width:38px;background:var(--ink);color:white;display:grid;place-items:center;border-radius:11px;font-size:15px;letter-spacing:-.08em;box-shadow:0 6px 16px #203c361b}
-    .brand-sub{font-size:10px;font-weight:700;letter-spacing:.14em;color:#788a7b;text-transform:uppercase;margin-top:2px}
-    .header-action,.share-button,.icon-button,.pill-button{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:1px solid var(--outline);background:#ffffffdc;color:var(--ink);border-radius:999px;text-decoration:none;font-weight:700;white-space:nowrap;transition:transform .18s ease,background .18s ease}
-    .header-action{padding:11px 17px;font-size:13px}.header-action:hover,.icon-button:hover,.pill-button:hover{transform:translateY(-1px);background:white}
-    .icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-    .intro{text-align:center;max-width:690px;margin:0 auto;padding:18px 18px 9px}
-    .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#658375;font-weight:850}
-    h1{font-size:clamp(27px,4.2vw,44px);font-weight:850;letter-spacing:-.055em;line-height:1.06;margin:10px 0 10px}
-    h1 em{font-style:normal;color:#5c8775}.intro p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-    .reader-wrap{max-width:1180px;margin:0 auto;padding:8px 20px 0}
-    .reading-row{max-width:1015px;margin:0 auto 13px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .reader-label{display:flex;gap:9px;align-items:center;font-size:12px;color:#687a72;font-weight:700}
-    .dot{width:7px;height:7px;border-radius:50%;background:#6ca985;box-shadow:0 0 0 3px #b9e0c267}
-    .reading-row .hint{font-size:12px;color:#819188}
-    .book-frame{position:relative;margin:0 auto;max-width:1020px;padding:0 34px}
-    .book{position:relative;margin:auto;width:min(100%,1000px);aspect-ratio:1.414;perspective:2600px;filter:drop-shadow(0 16px 16px #1b35232a);touch-action:pan-y;user-select:none;-webkit-user-select:none;isolation:isolate}
-    .book:before{content:"";position:absolute;left:-3px;right:-3px;top:6px;bottom:5px;background:#d6d7d0;border-radius:7px;transform:translate(5px,8px);z-index:-1;box-shadow:0 18px 34px #2e46312a}
-    .sheet{position:absolute;top:0;height:100%;width:50%;overflow:hidden;background:var(--paper)}
-    .sheet.left{left:0;border-radius:5px 0 0 5px;box-shadow:inset -14px 0 24px -23px #0007,inset 4px 0 8px #aabbad32}
-    .sheet.right{left:50%;border-radius:0 5px 5px 0;box-shadow:inset 14px 0 24px -23px #0007,inset -4px 0 8px #aabbad32}
-    .book-spine{position:absolute;top:0;bottom:0;left:50%;width:18px;transform:translateX(-50%);z-index:4;pointer-events:none;background:linear-gradient(90deg,#2d473328,transparent 40%,#405f3a20);mix-blend-mode:multiply}
-    .mobile-sheet{display:none}
-    .sheet-content{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;background:var(--paper)}
-    .sheet.empty .sheet-content{background:repeating-linear-gradient(180deg,#fffefb,#fffefb 28px,#f5f5ef 29px)}
-    .cover{padding:9%;background:linear-gradient(148deg,#15322c 0%,#244c3f 52%,#506e5d 100%);color:#fff;justify-content:space-between;overflow:hidden}
-    .cover:before{content:"";position:absolute;width:85%;aspect-ratio:1;right:-37%;bottom:12%;border:1px solid #ffffff38;border-radius:50%;box-shadow:0 0 0 60px #ffffff09,0 0 0 126px #ffffff08;pointer-events:none}
-    .cover:after{content:"";position:absolute;width:45%;height:15%;right:-9%;bottom:15%;transform:rotate(-28deg);background:#d5e3b624;border-radius:60px;pointer-events:none}
-    .cover-top{display:flex;align-items:center;justify-content:space-between;gap:7px;z-index:1}
-    .cover-logo{font-weight:950;font-size:clamp(17px,2.4vw,28px);letter-spacing:-.07em}
-    .cover-logo small{font-size:.45em;letter-spacing:.04em;vertical-align:middle;margin-left:3px}
-    .cover-edition{border:1px solid #ffffff4e;border-radius:50px;padding:7px 10px;font-size:clamp(7px,.9vw,11px);letter-spacing:.06em;text-transform:uppercase}
-    .cover-title{position:relative;z-index:1;margin-top:auto;margin-bottom:auto}
-    .cover-eyebrow{font-size:clamp(8px,1vw,13px);letter-spacing:.17em;font-weight:700;margin-bottom:12px;color:#d7e9d6}
-    .cover-title h2{font-size:clamp(33px,5.8vw,75px);letter-spacing:-.065em;line-height:.97;margin:0 0 17px;font-weight:950}
-    .cover-title h2 span{color:#b4d8b2}
-    .cover-title p{font-size:clamp(10px,1.35vw,16px);max-width:300px;line-height:1.55;color:#e0eadc}
-    .cover-bottom{position:relative;z-index:1;display:flex;align-items:end;justify-content:space-between;gap:10px;border-top:1px solid #ffffff42;padding-top:15px;font-size:clamp(8px,1vw,13px);letter-spacing:.04em}
-    .cover-sparkle{font-size:clamp(19px,2.8vw,36px);color:#c5e2be}
-    .flyer{background:#fcfcf8;padding:3.8%;gap:10px}
-    .flyer-head{height:auto;min-height:8%;flex:none;display:flex;justify-content:space-between;align-items:center;gap:7px;border-bottom:1px solid #e4e7df;padding-bottom:8px}
-    .flyer-head strong{font-size:clamp(10px,1.25vw,15px);line-height:1.18;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:78%;letter-spacing:-.02em}
-    .flyer-head span{font-size:clamp(7px,.9vw,11px);color:#829184;font-weight:800;white-space:nowrap}
-    .flyer-photo{flex:1;min-height:0;min-width:0;display:grid;place-items:center;position:relative;overflow:hidden;background:white;border:1px solid #f0f0eb;border-radius:3px;cursor:zoom-in}
-    .flyer-photo img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
-    .flyer-foot{flex:none;display:flex;align-items:center;justify-content:space-between;gap:7px;color:#657c70;font-size:clamp(7px,.9vw,11px);font-weight:700}
-    .flyer-foot .zoom-note{display:inline-flex;align-items:center;gap:5px}
-    .endcover{background:linear-gradient(135deg,#e1eadd,#f7faf2);color:var(--ink);padding:10%;align-items:center;justify-content:center;text-align:center;gap:17px}
-    .endcover .huge{font-size:clamp(35px,6vw,70px);line-height:1}.endcover h2{font-size:clamp(25px,3.7vw,46px);letter-spacing:-.065em;margin:0}
-    .endcover p{font-size:clamp(10px,1.25vw,15px);color:#65786d;line-height:1.55;max-width:300px;margin:0}
-    .endcover .signature{font-size:clamp(12px,1.6vw,19px);font-weight:900;letter-spacing:-.04em}
-    .flipper{display:none;position:absolute;z-index:5;top:0;width:50%;height:100%;transform-style:preserve-3d;pointer-events:none}
-    .flipper.next{display:block;left:50%;transform-origin:left center;animation:page-next .72s cubic-bezier(.36,.04,.25,1) forwards}
-    .flipper.prev{display:block;left:0;transform-origin:right center;animation:page-prev .72s cubic-bezier(.36,.04,.25,1) forwards}
-    .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);overflow:hidden;box-shadow:0 0 9px #14271b26}
-    .face.back{transform:rotateY(180deg)}
-    @keyframes page-next{from{transform:rotateY(0deg)}to{transform:rotateY(-180deg)}}
-    @keyframes page-prev{from{transform:rotateY(0deg)}to{transform:rotateY(180deg)}}
-    .page-click{position:absolute;inset:0;border:0;background:transparent;opacity:0;cursor:zoom-in;z-index:2}
-    .page-click:focus-visible{opacity:1;outline:3px solid #9dbca6;outline-offset:-5px}
-    .edge-arrow{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:42px;height:60px;background:#ffffffec;color:#254036;border:1px solid #e1e9de;box-shadow:0 9px 20px #28412d1b;border-radius:12px;z-index:7;font-size:24px;font-weight:500}
-    .edge-arrow:hover{background:#fff}.edge-arrow.prev{left:-8px}.edge-arrow.next{right:-8px}
-    .controls{display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 8px 8px}
-    .control-main{display:flex;align-items:center;gap:18px;justify-content:center}
-    .pill-button{padding:12px 16px;font-size:13px}.count-label{min-width:140px;text-align:center;font-size:13px;font-weight:850;letter-spacing:.02em}
-    .control-help{font-size:12px;color:#74847b;text-align:center}
-    .action-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-    .share-button{padding:12px 17px;background:#234638;color:white;border-color:#234638;font-size:13px}.share-button:hover{background:#1a392d;transform:translateY(-1px)}
-    .copy-button{padding:12px 17px;font-size:13px}
-    .thumb-section{max-width:1020px;margin:30px auto 20px;padding:0 20px}
-    .thumb-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-bottom:12px}
-    .thumb-head h3{font-size:16px;letter-spacing:-.03em;margin:0}.thumb-head span{font-size:12px;color:var(--muted)}
-    .thumb-list{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 17px;scrollbar-color:#b5c3b9 transparent}
-    .thumb{flex:0 0 92px;min-width:0;border:1px solid #dfe8dc;border-radius:11px;padding:6px;background:#fff;text-align:left;color:var(--ink);scroll-snap-align:start;box-shadow:0 5px 10px #162e2310;transition:border-color .2s,transform .2s}
-    .thumb:hover{transform:translateY(-2px)}.thumb[aria-current="page"]{border:2px solid #396f50;padding:5px}
-    .thumb-photo{height:111px;background:#f0f2ec;border-radius:6px;overflow:hidden;display:grid;place-items:center}
-    .thumb-photo img{width:100%;height:100%;object-fit:contain}.thumb-cover{background:linear-gradient(135deg,#183b30,#648577);color:#fff;font-size:13px;line-height:1.05;text-align:left;padding:11px;font-weight:850}.thumb-back{background:#dfecdf;color:#35624a;font-size:27px}
-    .thumb-label{font-size:10px;line-height:1.25;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:7px;padding:0 2px}
-    .empty-tip{max-width:580px;text-align:center;margin:0 auto 24px;background:#fff9e8;border:1px solid #eddfb8;padding:12px 18px;color:#6b5b36;border-radius:12px;font-size:13px}
-    footer{text-align:center;padding:20px 12px 32px;color:#78857d;font-size:11px}
-    dialog{border:0;padding:0;border-radius:16px;max-width:min(96vw,960px);width:100%;max-height:95vh;color:var(--ink);box-shadow:0 24px 75px #0820178c}
-    dialog::backdrop{background:#0d251cdb;backdrop-filter:blur(6px)}
-    .zoom-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;background:#fff;border-bottom:1px solid #e7eee5}
-    .zoom-title{font-size:13px;font-weight:800;max-width:52%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .zoom-actions{display:flex;align-items:center;gap:6px}.zoom-actions a,.zoom-actions button{padding:9px 11px;border:1px solid #d9e4da;background:#fff;border-radius:9px;text-decoration:none;color:#224936;font-size:12px;font-weight:700}
-    .zoom-img-wrap{height:min(77vh,920px);background:#f2f5f1;overflow:auto;display:grid;place-items:center;padding:10px;touch-action:pan-x pan-y pinch-zoom}
-    .zoom-img-wrap img{display:block;max-width:100%;max-height:100%;object-fit:contain}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#203e32;color:white;padding:11px 17px;border-radius:999px;box-shadow:0 8px 25px #10221855;font-size:13px;z-index:20;pointer-events:none}
-    [hidden]{display:none!important}
-    @media(max-width:760px){
-      .site-header{padding:14px 16px 8px}.brand{font-size:19px}.brand-mark{width:33px;height:33px;font-size:14px}.header-action{font-size:11px;padding:10px 12px}
-      .intro{padding:18px 16px 14px}.intro p{font-size:13px}.reader-wrap{padding:0 11px}.reading-row{padding:0 14px;margin-bottom:9px}.reading-row .hint{display:none}
-      .book-frame{width:100%;max-width:480px;padding:0 26px}
-      .book{width:100%;aspect-ratio:.71;max-height:74svh;filter:drop-shadow(0 13px 12px #243b2b2d)}
-      .book:before{transform:translate(3px,5px)}.sheet.left,.sheet.right,.book-spine{display:none}
-      .mobile-sheet{display:block;position:absolute;inset:0;border-radius:5px;width:100%;height:100%;overflow:hidden;background:var(--paper)}
-      .cover{padding:9%}.cover-logo{font-size:22px}.cover-edition{font-size:8px}.cover-eyebrow{font-size:11px}.cover-title h2{font-size:clamp(38px,11vw,65px)}.cover-title p{font-size:13px}.cover-bottom{font-size:10px}.cover-sparkle{font-size:32px}
-      .flyer{padding:4%;gap:9px}.flyer-head strong{font-size:13px}.flyer-head span{font-size:10px}.flyer-foot{font-size:10px}
-      .endcover h2{font-size:35px}.endcover p{font-size:13px}
-      .flipper{width:100%}.flipper.next,.flipper.prev{left:0;transform-origin:left center}
-      .flipper.prev{transform-origin:right center}
-      .edge-arrow{width:32px;height:53px;font-size:19px;border-radius:10px}.edge-arrow.prev{left:-6px}.edge-arrow.next{right:-6px}
-      .controls{padding-top:18px}.control-main{gap:12px}.control-help{font-size:11px}.pill-button{padding:10px 13px}.count-label{min-width:112px;font-size:12px}
-      .thumb-section{margin-top:24px}.thumb{flex-basis:81px}.thumb-photo{height:95px}
-      .zoom-bar{padding:9px}.zoom-title{max-width:38%;font-size:12px}.zoom-actions a,.zoom-actions button{padding:8px;font-size:11px}.zoom-img-wrap{height:76svh}
-    }
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#141514">
+<meta name="description" content="Katalog promo AIO Store. Geser halaman untuk melihat flyer terbaru.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Katalog Promo AIO Store">
+<meta property="og:description" content="Buka dan geser halaman katalog promo AIO Store.">
+<meta property="og:image" content="{{ '/assets/preview-wa.jpg' | absolute_url }}">
+<meta name="twitter:card" content="summary_large_image">
+<title>Katalog AIO Store</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#141514}
+body{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button{font:inherit}
+#reader{position:fixed;inset:0;inset:0 0 0 0;display:grid;place-items:center;background:#141514;overflow:hidden}
+#book{position:absolute;inset:0;display:flex;perspective:2200px;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+#book:active{cursor:grabbing}
+.leaf{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 50%;width:50%;height:100%;min-width:0;overflow:hidden;background:#141514}
+.leaf img,.face img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+#book.spread:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);pointer-events:none;background:linear-gradient(90deg,#0008,#ffffff1c,#0008);z-index:1}
+#turner{position:absolute;top:0;bottom:0;width:50%;z-index:5;transform-style:preserve-3d;pointer-events:none;display:none}
+#turner.next{display:block;left:50%;transform-origin:left center;animation:nextTurn .62s cubic-bezier(.30,.04,.24,1) forwards}
+#turner.prev{display:block;left:0;transform-origin:right center;animation:prevTurn .62s cubic-bezier(.30,.04,.24,1) forwards}
+.face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#141514;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 0 24px #0005}
+.face.back{transform:rotateY(180deg)}
+@keyframes nextTurn{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+@keyframes prevTurn{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
+.corner{position:absolute;z-index:9;border:0;display:grid;place-items:center;background:#111a;color:white;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;width:42px;height:42px;padding:9px;cursor:pointer;opacity:.55;transition:opacity .2s,background .2s}
+.corner:hover,.corner:focus-visible{opacity:1;background:#1a1d1ac9}
+.corner:disabled{opacity:.10;cursor:default}
+.corner svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#fullscreen{top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right))}
+#prev,#next{top:50%;transform:translateY(-50%)}
+#prev{left:max(5px,env(safe-area-inset-left))}
+#next{right:max(5px,env(safe-area-inset-right))}
+#empty{position:absolute;inset:0;display:none;place-items:center;color:#dce3df;text-align:center;font-size:14px;line-height:1.6;padding:24px}
+#empty.show{display:grid}
+#message{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:10;background:#171c17de;color:#fff;padding:10px 14px;border-radius:12px;display:none;font-size:12px;text-align:center}
+#message.show{display:block}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:767px){
+  #book.spread:after{display:none}
+  .leaf{flex-basis:100%;width:100%}
+  .leaf.second{display:none}
+  #turner{width:100%}
+  #turner.next,#turner.prev{left:0}
+  #prev,#next{width:33px;height:45px;padding:6px;opacity:.24}
+  .corner#fullscreen{width:40px;height:40px;opacity:.50}
+}
+@media(prefers-reduced-motion:reduce){#turner.next,#turner.prev{animation-duration:.01ms}}
+</style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="./" aria-label="AIO Store katalog awal"><span class="brand-mark">AIO</span><span><span>AIO STORE</span><div class="brand-sub">Digital Flipbook</div></span></a>
-    <button class="header-action" id="topShare" type="button" aria-label="Bagikan katalog melalui WhatsApp">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.7a9 9 0 0 1-13.4 7.9L3 21l1.4-4.4A9 9 0 1 1 21 11.7Z"/><path d="M8.5 8.5c.4 3.2 3.2 6.1 6.7 6.8l1.4-1.4-2.5-1.4-1.1 1.1a7 7 0 0 1-2.5-2.5l1-1.1-1.4-2.5-1.6 1Z"/></svg>
-      Share WhatsApp
-    </button>
-  </header>
-  <section class="intro">
-    <div class="kicker">AIO STORE • KATALOG DIGITAL</div>
-    <h1>Jelajahi katalog <em>seperti buku.</em></h1>
-    <p>Balik halaman untuk melihat flyer. Klik gambar untuk memperbesar dan simpan promo pilihanmu.</p>
-  </section>
-  <main>
-    <div class="reader-wrap">
-      <div class="reading-row"><span class="reader-label"><span class="dot"></span>Katalog interaktif</span><span class="hint">Gunakan panah keyboard atau tombol untuk membalik halaman</span></div>
-      <div class="book-frame">
-        <button class="edge-arrow prev" id="edgePrev" type="button" aria-label="Halaman sebelumnya">‹</button>
-        <div class="book" id="book" role="group" aria-label="Buku katalog promo AIO Store">
-          <div class="sheet left" id="leftLeaf"></div><div class="sheet right" id="rightLeaf"></div>
-          <div class="book-spine"></div><div class="mobile-sheet" id="mobileLeaf"></div>
-          <div class="flipper" id="flipper" aria-hidden="true"><div class="face front" id="flipFront"></div><div class="face back" id="flipBack"></div></div>
-        </div>
-        <button class="edge-arrow next" id="edgeNext" type="button" aria-label="Halaman berikutnya">›</button>
-      </div>
-      <div class="controls">
-        <div class="control-main"><button class="pill-button" id="prevButton" type="button">← Sebelumnya</button><span class="count-label" id="pageCounter" aria-live="polite">Memuat...</span><button class="pill-button" id="nextButton" type="button">Berikutnya →</button></div>
-        <div class="control-help">Geser ke kiri atau kanan di HP untuk membalik halaman · Ketuk flyer untuk zoom</div>
-        <div class="action-row">
-          <button class="share-button" id="mainShare" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.7a9 9 0 0 1-13.4 7.9L3 21l1.4-4.4A9 9 0 1 1 21 11.7Z"/><path d="M8.5 8.5c.4 3.2 3.2 6.1 6.7 6.8l1.4-1.4-2.5-1.4-1.1 1.1a7 7 0 0 1-2.5-2.5l1-1.4-2.5-1.6-1.1 1Z"/></svg>Bagikan katalog ke WA</button>
-          <button class="header-action copy-button" id="copyLink" type="button">Salin link</button>
-        </div>
-      </div>
-    </div>
-    <section class="thumb-section" aria-labelledby="thumbHeading"><div class="thumb-head"><h3 id="thumbHeading">Pilih halaman</h3><span id="flyerNumber">Memuat flyer...</span></div><div class="thumb-list" id="thumbList"></div></section>
-    <div class="empty-tip" id="emptyTip" hidden>Flyer belum diunggah. Tambahkan JPEG di folder <strong>flyers</strong> pada GitHub. Katalog akan menampilkan halaman baru setelah website selesai diperbarui.</div>
-  </main>
-  <footer>© AIO Store · Katalog digital · Seluruh harga dan promo mengikuti informasi pada flyer.</footer>
-  <dialog id="zoomDialog" aria-label="Perbesar flyer"><div class="zoom-bar"><strong class="zoom-title" id="zoomTitle">Flyer</strong><div class="zoom-actions"><button id="zoomShare" type="button">Bagikan</button><a id="zoomDownload" download>Download</a><button id="zoomClose" type="button" aria-label="Tutup zoom">✕</button></div></div><div class="zoom-img-wrap"><img id="zoomImage" alt="Flyer diperbesar"></div></dialog>
-  <div class="toast" id="toast" hidden role="status"></div>
-  <!-- Dibangun otomatis oleh Jekyll GitHub Pages dari setiap file JPEG di folder /flyers. -->
-  <div id="flyer-data" hidden>
-    {% assign flyer_files = site.static_files | where: 'flyer', true | sort: 'name' %}
-    {% for flyer in flyer_files %}
-      {% assign ext = flyer.extname | downcase %}
-      {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' %}
-        <span data-src="{{ flyer.path | relative_url | escape }}" data-name="{{ flyer.basename | escape }}"></span>
-      {% endif %}
-    {% endfor %}
+<main id="reader" aria-label="Katalog flyer AIO Store">
+  <div id="book" class="spread" role="group" aria-label="Geser halaman katalog">
+    <div class="leaf" id="left"></div>
+    <div class="leaf second" id="right"></div>
+    <div id="turner" aria-hidden="true"><div class="face front" id="front"></div><div class="face back" id="back"></div></div>
   </div>
-  <script>
-    (() => {
-      'use strict';
-      const $ = (id) => document.getElementById(id);
-      const raw = [...$('flyer-data').querySelectorAll('span[data-src]')].map(el => ({src:el.dataset.src, raw:el.dataset.name}));
-      // Untuk melihat index.html langsung dari komputer; versi online membaca isi folder secara otomatis.
-      if (location.protocol === 'file:' && raw.length === 0) raw.push({src:'flyers/01__contoh-flyer.jpg',raw:'01__contoh-flyer'});
-      raw.sort((a,b) => a.raw.localeCompare(b.raw,'id',{numeric:true,sensitivity:'base'}));
-      const flyers = raw.map((x,i) => ({kind:'flyer',src:x.src,title:readTitle(x.raw),number:i+1}));
-      const cover={kind:'cover'},back={kind:'back'},blank={kind:'blank'};
-      const mobilePages = [cover,...flyers,back];
-      const desktopPages = [cover,...flyers];
-      if(desktopPages.length % 2 !== 0) desktopPages.push(blank);
-      desktopPages.push(back);
-      const maxSpread=(desktopPages.length-1)/2;
-      let page=0,spread=0,moving=false,zoomPage=null,toastTimeout;
-      const mq = window.matchMedia('(max-width:760px)');
-      const isMobile=()=>mq.matches;
-      function readTitle(s){return s.replace(/^\d{1,4}[\s_.-]+/,'').replace(/__/g,' · ').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b\w/g,c=>c.toUpperCase()) || 'Flyer Promo'}
-      function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-      function entryHTML(p){
-        if (!p || p.kind==='blank') return '<div class="sheet-content" style="background:#fdfcf8"></div>';
-        if(p.kind==='cover') return `<div class="sheet-content cover"><div class="cover-top"><div class="cover-logo">AIO<small>STORE</small></div><div class="cover-edition">Katalog digital</div></div><div class="cover-title"><div class="cover-eyebrow">PILIHAN UNTUK RUMAHMU</div><h2>KATALOG<br><span>PROMO.</span></h2><p>Temukan pilihan elektronik dan penawaran melalui flyer AIO Store.</p></div><div class="cover-bottom"><span>BUKA & JELAJAHI HALAMANNYA<br>↗ SELAMAT MEMILIH</span><span class="cover-sparkle">✳</span></div></div>`;
-        if(p.kind==='back') return `<div class="sheet-content endcover"><div class="huge">✳</div><h2>Terima kasih<br>sudah melihat!</h2><p>Bagikan katalog AIO Store ini ke keluarga dan teman. Simpan link untuk melihat flyer terbaru.</p><div class="signature">AIO STORE</div></div>`;
-        return `<div class="sheet-content flyer"><div class="flyer-head"><strong title="${escapeHtml(p.title)}">${escapeHtml(p.title)}</strong><span>AIO STORE</span></div><div class="flyer-photo" data-open="${p.number}" role="button" tabindex="0" aria-label="Perbesar flyer ${escapeHtml(p.title)}"><img src="${escapeHtml(p.src)}" alt="${escapeHtml(p.title)}" draggable="false" loading="${p.number<3?'eager':'lazy'}"></div><div class="flyer-foot"><span>FLYER ${String(p.number).padStart(2,'0')}</span><span class="zoom-note">⌕ KETUK UNTUK PERBESAR</span></div></div>`;
+  <button id="prev" class="corner" type="button" aria-label="Halaman sebelumnya" title="Halaman sebelumnya">
+    <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+  </button>
+  <button id="next" class="corner" type="button" aria-label="Halaman berikutnya" title="Halaman berikutnya">
+    <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+  <button id="fullscreen" class="corner" type="button" aria-label="Layar penuh" title="Layar penuh">
+    <svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg>
+  </button>
+  <p id="empty">Belum ada flyer di folder <strong>flyers</strong>.</p>
+  <div id="message" role="status"></div>
+  <span id="status" class="visually-hidden" aria-live="polite"></span>
+</main>
+<div id="flyer-data" hidden>
+  {% assign flyer_files = site.static_files | where: 'flyer', true | sort: 'name' %}
+  {% for flyer in flyer_files %}
+    {% assign ext = flyer.extname | downcase %}
+    {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' %}
+      <span data-src="{{ flyer.path | relative_url | escape }}"></span>
+    {% endif %}
+  {% endfor %}
+</div>
+<script>
+(function(){
+  'use strict';
+  const byId = id => document.getElementById(id);
+  const reader = byId('reader'), book = byId('book');
+  const left = byId('left'), right = byId('right');
+  const turner = byId('turner'), front = byId('front'), back = byId('back');
+  const items = Array.from(byId('flyer-data').querySelectorAll('[data-src]')).map(n=>n.dataset.src);
+  const mobileQuery = matchMedia('(max-width:767px)');
+  let mobile = mobileQuery.matches;
+  let index = 0, busy = false, flipTimer = null, start = null, ignoreClick = false;
+  const maxIndex = () => Math.max(0, mobile ? items.length - 1 : Math.floor((items.length - 1) / 2));
+  function clear(el){el.replaceChildren();}
+  function imageInto(el, idx){
+    clear(el);
+    if(idx < 0 || idx >= items.length)return;
+    const img = document.createElement('img');
+    img.src = items[idx];
+    img.alt = 'Flyer promo halaman ' + (idx + 1);
+    img.draggable = false;
+    img.decoding = 'async';
+    el.appendChild(img);
+  }
+  function render(){
+    const first = mobile ? index : index * 2;
+    imageInto(left, first);
+    imageInto(right, mobile ? -1 : first + 1);
+    book.classList.toggle('spread', !mobile);
+    byId('prev').disabled = index <= 0 || !items.length;
+    byId('next').disabled = index >= maxIndex() || !items.length;
+    byId('empty').classList.toggle('show', items.length === 0);
+    byId('status').textContent = 'Halaman ' + (first + 1) + ' dari ' + items.length;
+  }
+  function turn(step){
+    if(busy || !items.length)return;
+    const nextIndex = Math.max(0, Math.min(maxIndex(), index + step));
+    if(nextIndex === index)return;
+    busy = true;
+    const oldFirst = mobile ? index : index * 2;
+    const newFirst = mobile ? nextIndex : nextIndex * 2;
+    if(mobile){
+      imageInto(left, newFirst);
+      imageInto(front, oldFirst);
+      imageInto(back, newFirst);
+    }else if(step > 0){
+      imageInto(left, oldFirst);
+      imageInto(right, newFirst + 1);
+      imageInto(front, oldFirst + 1);
+      imageInto(back, newFirst);
+    }else{
+      imageInto(left, newFirst);
+      imageInto(right, oldFirst + 1);
+      imageInto(front, oldFirst);
+      imageInto(back, newFirst + 1);
+    }
+    turner.className = step > 0 ? 'next' : 'prev';
+    const done = () => {
+      index = nextIndex;
+      turner.className = '';
+      clear(front); clear(back);
+      busy = false; render();
+    };
+    flipTimer = setTimeout(done, matchMedia('(prefers-reduced-motion:reduce)').matches ? 20 : 650);
+  }
+  function showMessage(message){
+    const el = byId('message');
+    el.textContent = message; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2800);
+  }
+  async function toggleFullscreen(){
+    try{
+      if(document.fullscreenElement && document.exitFullscreen){
+        await document.exitFullscreen();
+      }else if(reader.requestFullscreen){
+        await reader.requestFullscreen();
+      }else if(reader.webkitRequestFullscreen){
+        reader.webkitRequestFullscreen();
+      }else{
+        showMessage('Tampilan sudah memenuhi layar. Gunakan menu browser untuk layar penuh.');
       }
-      function desktopPair(s){return s===0?[null,desktopPages[0]]:[desktopPages[s*2-1]||null,desktopPages[s*2]||null]}
-      function activeIndexes(){if(isMobile()) return [page];const [a,b]=desktopPair(spread);return [mobilePages.indexOf(a),mobilePages.indexOf(b)].filter(x=>x>=0)}
-      function render(){
-        if(isMobile()) $('mobileLeaf').innerHTML=entryHTML(mobilePages[page]);
-        else {const [a,b]=desktopPair(spread);$('leftLeaf').innerHTML=entryHTML(a);$('rightLeaf').innerHTML=entryHTML(b)}
-        const indexes=activeIndexes();
-        const txt = isMobile()? `Halaman ${page+1} / ${mobilePages.length}` : spread===0 ? 'Sampul depan' : `Lembar ${spread} / ${maxSpread}`;
-        $('pageCounter').textContent=txt;
-        const atStart=isMobile()?page===0:spread===0, atEnd=isMobile()?page===mobilePages.length-1:spread===maxSpread;
-        $('prevButton').disabled=$('edgePrev').disabled=atStart;
-        $('nextButton').disabled=$('edgeNext').disabled=atEnd;
-        document.querySelectorAll('.thumb').forEach(b=>b.setAttribute('aria-current',indexes.includes(Number(b.dataset.page))?'page':'false'));
-        const current=isMobile()?page:(mobilePages.indexOf(desktopPair(spread)[1])>=0 ? mobilePages.indexOf(desktopPair(spread)[1]) : Math.max(0,mobilePages.indexOf(desktopPair(spread)[0])));
-        const url=new URL(location.href);url.searchParams.delete('halaman');if(current>0)url.searchParams.set('halaman',String(current)); else url.searchParams.delete('halaman');
-        history.replaceState(null,'',url.pathname+url.search+url.hash);
-      }
-      function turn(direction){
-        if(moving)return;
-        const max=isMobile()?mobilePages.length-1:maxSpread;
-        const old=isMobile()?page:spread,next=Math.min(max,Math.max(0,old+direction));
-        if(next===old)return;
-        moving=true;
-        const mobile=isMobile(),oldPair=desktopPair(spread),newPair=desktopPair(next),layer=$('flipper');
-        $('book').style.pointerEvents='none';
-        if(mobile){$('mobileLeaf').innerHTML=entryHTML(mobilePages[next]);$('flipFront').innerHTML=entryHTML(mobilePages[old]);$('flipBack').innerHTML=entryHTML(mobilePages[next]);page=next;}
-        else if(direction>0){$('rightLeaf').innerHTML=entryHTML(newPair[1]);$('flipFront').innerHTML=entryHTML(oldPair[1]);$('flipBack').innerHTML=entryHTML(newPair[0]);spread=next;}
-        else {$('leftLeaf').innerHTML=entryHTML(newPair[0]);$('flipFront').innerHTML=entryHTML(oldPair[0]);$('flipBack').innerHTML=entryHTML(newPair[1]);spread=next;}
-        layer.className='flipper '+(direction>0?'next':'prev');
-        const finish=()=>{layer.className='flipper';$('flipFront').innerHTML='';$('flipBack').innerHTML='';$('book').style.pointerEvents='';moving=false;render()};
-        const duration=window.matchMedia('(prefers-reduced-motion:reduce)').matches?20:740;
-        window.setTimeout(finish,duration);
-      }
-      function jumpTo(target){
-        if(moving)return;
-        const idx=Math.max(0,Math.min(mobilePages.length-1,target));
-        if(isMobile())page=idx;
-        else {const p=mobilePages[idx],di=desktopPages.indexOf(p);spread=di===0?0:Math.ceil(di/2)}
-        render();
-        $('book').scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
-      }
-      function catalogURL(pageNumber=null){const u=new URL(location.href);u.search='';u.hash='';if(pageNumber!==null)u.searchParams.set('halaman',String(pageNumber));return u.href}
-      function whatsappLink(url){return 'https://wa.me/?text='+encodeURIComponent('Lihat katalog digital AIO Store 📖\n'+url)}
-      function share(url){window.open(whatsappLink(url),'_blank','noopener,noreferrer');}
-      function toast(text){const n=$('toast');n.textContent=text;n.hidden=false;window.clearTimeout(toastTimeout);toastTimeout=window.setTimeout(()=>{n.hidden=true},2600)}
-      async function copy(url){try{await navigator.clipboard.writeText(url);toast('Link berhasil disalin')}catch(e){const x=document.createElement('textarea');x.value=url;document.body.appendChild(x);x.select();try{document.execCommand('copy');toast('Link berhasil disalin')}catch(err){toast('Salin URL di bilah alamat browser')}x.remove()}}
-      function openZoom(idx){const p=flyers[idx-1];if(!p)return;zoomPage=idx;$('zoomTitle').textContent=p.title;$('zoomImage').src=p.src;$('zoomImage').alt=p.title;$('zoomDownload').href=p.src;$('zoomDownload').download=p.src.split('/').pop().split('?')[0];$('zoomDialog').showModal()}
-      document.addEventListener('click',event=>{const target=event.target.closest('[data-open]');if(target && !moving){openZoom(Number(target.dataset.open))}});
-      document.addEventListener('keydown',event=>{if(event.target.matches('[data-open]')&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openZoom(Number(event.target.dataset.open));}});
-      $('zoomClose').addEventListener('click',()=>$('zoomDialog').close());
-      $('zoomDialog').addEventListener('click',e=>{if(e.target===$('zoomDialog'))$('zoomDialog').close()});
-      $('zoomShare').addEventListener('click',()=>share(catalogURL(zoomPage)));
-      $('topShare').addEventListener('click',()=>share(catalogURL()));
-      $('mainShare').addEventListener('click',()=>share(catalogURL()));
-      $('copyLink').addEventListener('click',()=>copy(catalogURL()));
-      $('prevButton').addEventListener('click',()=>turn(-1));$('nextButton').addEventListener('click',()=>turn(1));$('edgePrev').addEventListener('click',()=>turn(-1));$('edgeNext').addEventListener('click',()=>turn(1));
-      document.addEventListener('keydown',e=>{if($('zoomDialog').open||e.target.matches('input,textarea'))return;if(e.key==='ArrowRight'){e.preventDefault();turn(1)}if(e.key==='ArrowLeft'){e.preventDefault();turn(-1)}});
-      let touchStart=null;
-      $('book').addEventListener('touchstart',e=>{if(e.touches.length===1)touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
-      $('book').addEventListener('touchend',e=>{if(!touchStart||e.changedTouches.length===0)return;const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;touchStart=null;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.25){turn(dx<0?1:-1)}},{passive:true});
-      const list=$('thumbList');
-      mobilePages.forEach((p,i)=>{const b=document.createElement('button');b.className='thumb';b.type='button';b.dataset.page=String(i);b.setAttribute('aria-label',`Buka halaman ${i+1}: ${p.title||p.kind}`);
-        const coverThumb=p.kind==='cover'?'<div class="thumb-photo thumb-cover">KATALOG<br>PROMO.</div>':p.kind==='back'?'<div class="thumb-photo thumb-back">✳</div>':`<div class="thumb-photo"><img src="${escapeHtml(p.src)}" alt="" loading="lazy"></div>`;
-        b.innerHTML=coverThumb+`<div class="thumb-label">${escapeHtml(p.title||(p.kind==='cover'?'Sampul depan':'Sampul belakang'))}</div>`;
-        b.addEventListener('click',()=>jumpTo(i));list.appendChild(b)
-      });
-      $('flyerNumber').textContent=flyers.length+' flyer tersedia';$('emptyTip').hidden=flyers.length!==0;
-      const queryPage=Number(new URL(location.href).searchParams.get('halaman'));
-      if(Number.isFinite(queryPage)&&queryPage>0)page=Math.min(mobilePages.length-1,Math.floor(queryPage));
-      if(page>0){const dp=desktopPages.indexOf(mobilePages[page]);spread=Math.ceil(dp/2)}
-      let previousMobile=isMobile();
-      const onResize=()=>{const m=isMobile();if(m!==previousMobile&&!moving){previousMobile=m;const current=activeIndexes()[0]??0;if(m)page=Math.max(0,current);else {const dp=desktopPages.indexOf(mobilePages[page]);spread=dp<1?0:Math.ceil(dp/2)}render()}};
-      mq.addEventListener?.('change',onResize);
-      render();
-    })();
-  </script>
+    }catch(e){showMessage('Mode layar penuh tidak didukung oleh browser ini.');}
+  }
+  function syncFullscreen(){
+    const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+    byId('fullscreen').setAttribute('aria-label', active ? 'Keluar layar penuh' : 'Layar penuh');
+  }
+  byId('prev').addEventListener('click',()=>turn(-1));
+  byId('next').addEventListener('click',()=>turn(1));
+  byId('fullscreen').addEventListener('click',toggleFullscreen);
+  document.addEventListener('fullscreenchange',syncFullscreen);
+  document.addEventListener('webkitfullscreenchange',syncFullscreen);
+  book.addEventListener('pointerdown',event=>{
+    if(event.isPrimary && event.button === 0)start = {x:event.clientX,y:event.clientY};
+  });
+  book.addEventListener('pointerup',event=>{
+    if(!start)return;
+    const dx = event.clientX - start.x, dy = event.clientY - start.y;
+    start = null;
+    if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.15){
+      ignoreClick = true;
+      turn(dx<0?1:-1);
+      setTimeout(()=>{ignoreClick=false},350);
+    }
+  });
+  book.addEventListener('pointercancel',()=>{start=null});
+  book.addEventListener('click',event=>{
+    if(ignoreClick || busy)return;
+    const relativeX = event.clientX / window.innerWidth;
+    if(relativeX < .22)turn(-1);
+    else if(relativeX > .78)turn(1);
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key === 'ArrowRight'){event.preventDefault();turn(1)}
+    if(event.key === 'ArrowLeft'){event.preventDefault();turn(-1)}
+    if(event.key === 'Home'){index=0;render()}
+    if(event.key === 'End'){index=maxIndex();render()}
+  });
+  const updateMode=()=>{
+    const now = mobileQuery.matches;
+    if(now===mobile)return;
+    if(busy){clearTimeout(flipTimer);turner.className='';clear(front);clear(back);busy=false}
+    const first = mobile ? index : index * 2;
+    mobile = now;
+    index = mobile ? first : Math.floor(first/2);
+    index = Math.min(maxIndex(),index);
+    render();
+  };
+  if(mobileQuery.addEventListener)mobileQuery.addEventListener('change',updateMode);
+  else if(mobileQuery.addListener)mobileQuery.addListener(updateMode);
+  const deepLink = new URL(location.href).searchParams.get('halaman');
+  if(deepLink && /^\d+$/.test(deepLink)){
+    const p = Math.max(0,Number(deepLink)-1);
+    index = mobile ? p : Math.floor(p/2);
+    index = Math.min(maxIndex(),index);
+  }
+  render();
+})();
+</script>
 </body>
 </html>
