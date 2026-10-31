@@ -1,57 +1,37 @@
-# PANDUAN SETUP — AIO Katalog Flyer di GitHub Pages
+# AIO Store — Katalog Digital Flipbook
 
-## A. Buat repository GitHub
+## Tampilan untuk customer
 
-1. Masuk ke https://github.com/new
-2. **Repository name:** `aio-katalog-flyer` (wajib nama ini, sesuai `_config.yml`).
-3. Pilih **Public** (dibutuhkan pada GitHub Free).
-4. Klik **Create repository**. Hindari membuat README otomatis agar tidak bentrok saat unggah.
+Website tampil seperti buku digital: di HP **satu halaman**; di laptop **dua halaman**. Geser jari atau tekan tombol panah untuk membalik halaman. Ketuk flyer untuk memperbesar atau download JPEG. Tombol **Bagikan katalog ke WA** membuka WhatsApp dan menyisipkan link katalog. Tautan yang dibagikan bisa diakses siapa saja.
 
-## B. Upload paket website — tanpa terminal
+## Instal di GitHub Pages
 
-1. Unduh dan **extract** file ZIP `aio-katalog-flyer.zip` di komputer.
-2. Buka repository `aio-katalog-flyer` yang baru dibuat.
-3. Klik **Add file > Upload files**.
-4. Drag **seluruh isi** folder `aio-katalog-flyer` ke area upload, bukan folder pembungkusnya: `index.html`, `_config.yml`, `README.md`, `PANDUAN-SETUP.md`, folder `assets` dan `flyers`. Pastikan struktur folder terjaga. GitHub mendukung drag-and-drop folder beserta isi pada browser yang mendukung.
-5. Klik **Commit changes**. Pastikan branch `main`.
+1. Buka https://github.com/new lalu buat repository bernama `aio-katalog-flyer`, pilih **Public**, klik **Create repository**. Kalau repository lama `aio-katalog-flyer` sudah dibuat, pakai yang ada.
+2. Download dan **extract** ZIP ini. Di repository buka **Add file > Upload files**, lalu upload **isi folder**, bukan folder pembungkusnya. Pastikan `index.html` dan `_config.yml` ada di root, serta folder `flyers` dan `assets` ikut terupload.
+3. Jika sebelumnya sudah upload versi katalog galeri, timpa file `index.html` dan `_config.yml` dengan versi baru. File lama di folder `assets` boleh tetap ada, tetapi tidak dipakai.
+4. Pilih **Commit changes**.
+5. Buka **Settings > Pages**, pada **Build and deployment** pilih **Deploy from a branch**, branch **main**, folder **/(root)**, lalu **Save**.
+6. Buka **Visit site**, biasanya di alamat `https://USERNAME.github.io/aio-katalog-flyer/`. GitHub Pages kadang butuh beberapa menit untuk menyelesaikan deploy. Cek tab **Actions** untuk status.
 
-Jika drag folder gagal, unggah lewat halaman file per folder atau gunakan GitHub Desktop. Terpenting: `index.html` dan `_config.yml` berada di **root repository**.
+## Ganti dan tambah flyer JPEG
 
-## C. Nyalakan GitHub Pages
+1. Masuk repository > folder `flyers` > **Add file > Upload files**.
+2. Upload flyer `.jpg` atau `.jpeg`, kemudian **Commit changes**.
+3. Katalog otomatis mendeteksi semua JPEG di `flyers` pada build berikutnya. **Tidak perlu mengubah HTML, JSON, atau JavaScript**.
+4. Urutan buku berdasarkan nama file secara alfabetis. Gunakan `01__flyer-tv.jpg`, `02__flyer-ac.jpg`, `03__flyer-kulkas.jpg` dan seterusnya agar halaman sesuai urutan.
+5. Hapus file contoh `01__contoh-flyer.jpg` dan upload flyer asli sebelum membagikan ke customer.
+6. Setelah GitHub Pages selesai deploy, refresh browser untuk melihat perubahan.
 
-1. Di repository, klik **Settings > Pages**.
-2. Bagian **Build and deployment > Source** pilih **Deploy from a branch**.
-3. **Branch:** `main`. **Folder:** `/(root)`.
-4. Klik **Save**.
-5. Setelah build berhasil, klik **Visit site**. Alamatnya akan berbentuk: `https://USERNAME.github.io/aio-katalog-flyer/`.
-6. Jika belum tampil, cek menu **Actions** untuk status build. Publikasi dapat memerlukan beberapa menit.
+**Penting:** hanya `.jpg` dan `.jpeg` dari folder `flyers` yang otomatis dimasukkan. Gunakan gambar vertikal (portrait) dengan lebar sekitar 1200–1600px agar terbaca di HP. Hindari JPEG terlalu besar supaya halaman cepat dibuka. Semua flyer dan isi website GitHub Pages ini bersifat **publik**, jangan unggah informasi rahasia.
 
-## D. Tambah/ubah flyer JPEG kapan pun
+## Cara share ke WhatsApp
 
-1. Buka repository > folder `flyers`.
-2. Klik **Add file > Upload files**.
-3. Pilih gambar `.jpg` atau `.jpeg`. Contoh: `ac__promo-ac-sharp.jpg`.
-4. Klik **Commit changes**.
-5. GitHub Pages otomatis build ulang. Refresh website setelah deployment selesai.
-6. Hapus `tv__contoh-flyer.jpg` sebelum membagikan katalog ke pelanggan.
+Dari HP, buka situs katalog lalu klik **Bagikan katalog ke WA**. Kamu juga bisa salin URL dan kirim manual lewat WhatsApp. Saat customer mengetuk URL, katalog terbuka seperti buku. Tombol di website juga mempermudah pelanggan membagikan ke orang lain.
 
-### Kategori otomatis dari nama file
+## Preview WhatsApp
 
-`tv__` = TV & Audio | `ac__` = AC | `kulkas__` = Kulkas | `mesin-cuci__` = Mesin Cuci | `promo__` = Promo Spesial.
+Website dilengkapi metadata Open Graph dan file `assets/preview-wa.jpg` agar WhatsApp dapat menampilkan preview saat membaca tautan publik. Tampilan preview dan waktunya diperbarui ditentukan oleh cache WhatsApp. Kalau URL baru belum menghasilkan thumbnail, pastikan website sudah public dan dapat dibuka dari HP, kemudian coba kirim lagi setelah deploy.
 
-Teks sesudah `__` adalah judul. Misal `kulkas__promo-lg-november.jpg` akan tampil sebagai **Promo Lg November** di kategori **Kulkas**.
+## Tidak perlu server atau database
 
-**Jika tidak ingin kategori**, nama file cukup `flyer-november.jpg`; otomatis berada di kategori **Lainnya**.
-
-### Ubah gambar
-
-- Ganti file lama dengan nama yang **persis sama** agar link tidak berubah (GitHub akan membuat commit terbaru).
-- Atau hapus gambar lama dan upload gambar baru; link lama mungkin tidak berlaku.
-
-### Batasan dan keamanan
-
-- GitHub Pages membuat website **publik**. Jangan unggah data rahasia.
-- Untuk katalog yang hanya memuat JPEG, gunakan resolusi yang tetap terbaca, umumnya lebar 1200–1600 px dan ukuran file ideal di bawah sekitar 2 MB agar cepat di HP. Ukuran ini rekomendasi, bukan batas layanan.
-- File flyer langsung dapat diakses melalui URL gambar; website tidak menyimpan data pelanggan.
-- Jika membuat repository dengan nama lain, sesuaikan `baseurl` di `_config.yml` menjadi `/nama-repository-lain` sebelum publish.
-- Jangan upload file `.nojekyll` karena website ini menggunakan Liquid/Jekyll untuk menemukan semua flyer otomatis.
+Katalog ini berisi HTML/Jekyll + gambar saja. Tidak memakai login, checkout, API, database, atau biaya hosting terpisah pada GitHub Pages untuk repository publik.

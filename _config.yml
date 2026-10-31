@@ -1,19 +1,13 @@
-# GitHub Pages + Jekyll. Nama repository harus 'aio-katalog-flyer'.
-# Jika mengganti nama repository, ganti baseurl sesuai nama repo.
-title: 'AIO Store | Katalog Flyer'
-description: 'Kumpulan flyer promo AIO Store. Lihat, simpan, dan bagikan flyer terbaru.'
-baseurl: '/aio-katalog-flyer'
-lang: 'id'
-
-# Semua gambar di folder flyers otomatis masuk ke galeri.
+title: 'AIO Store | Katalog Digital'
+description: 'Katalog flyer AIO Store dengan tampilan flipbook digital. Buka halaman seperti buku, lalu bagikan lewat WhatsApp.'
+lang: id
+# GitHub Pages mengatur url dan baseurl otomatis berdasarkan repository.
+# Jangan upload file .nojekyll karena katalog menggunakan Jekyll.
 defaults:
   - scope:
       path: 'flyers'
     values:
       flyer: true
-
-# Jangan tambahkan file .nojekyll; halaman menggunakan Liquid/Jekyll.
 exclude:
   - README.md
   - PANDUAN-SETUP.md
-  - LICENSE
