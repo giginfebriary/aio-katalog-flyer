@@ -56,6 +56,21 @@ button{font:inherit}
   .corner#fullscreen{width:40px;height:40px;opacity:.50}
 }
 @media(prefers-reduced-motion:reduce){#turner.next,#turner.prev{animation-duration:.01ms}}
+
+[hidden]{display:none!important}
+#zoomOverlay{position:absolute;inset:0;z-index:30;background:#0a0b0a;overflow:hidden;touch-action:none}
+#zoomStage{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none;overscroll-behavior:none;cursor:grab}
+#zoomStage:active{cursor:grabbing}
+#zoomImage{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-select:none;pointer-events:none;transform-origin:center center;will-change:transform;-webkit-user-drag:none}
+.zoom-control{position:absolute;z-index:32;display:grid;place-items:center;border:1px solid #ffffff18;background:#171b17bb;color:#fff;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;cursor:pointer;touch-action:manipulation}
+.zoom-control svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#zoomTrigger{top:max(12px,env(safe-area-inset-top));right:calc(max(12px,env(safe-area-inset-right)) + 50px)}
+#zoomClose{width:42px;height:42px;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right))}
+#zoomToolbar{position:absolute;z-index:32;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:5px;border-radius:999px;background:#171b17b9;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);touch-action:manipulation}
+#zoomToolbar button{position:static;width:40px;height:40px;flex:0 0 40px;background:transparent;border:0}
+#zoomToolbar button:disabled{opacity:.35;cursor:default}
+#zoomLevel{font-size:12px;color:#fff;min-width:44px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+@media(max-width:767px){#zoomTrigger{width:40px;height:40px;opacity:.50}}
 </style>
 </head>
 <body>
@@ -77,6 +92,20 @@ button{font:inherit}
   <p id="empty">Belum ada flyer di folder <strong>flyers</strong>.</p>
   <div id="message" role="status"></div>
   <span id="status" class="visually-hidden" aria-live="polite"></span>
+
+  <button id="zoomTrigger" class="corner" type="button" aria-label="Perbesar flyer" title="Perbesar flyer">
+    <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 8v5M8 10.5h5"/></svg>
+  </button>
+  <div id="zoomOverlay" role="dialog" aria-modal="true" aria-label="Perbesar flyer" hidden>
+    <div id="zoomStage"><img id="zoomImage" alt="Flyer diperbesar" draggable="false"></div>
+    <button id="zoomClose" class="zoom-control" type="button" aria-label="Tutup zoom" title="Tutup zoom"><svg viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></svg></button>
+    <div id="zoomToolbar">
+      <button id="zoomOut" class="zoom-control" type="button" aria-label="Perkecil" title="Perkecil"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <span id="zoomLevel" aria-live="polite">100%</span>
+      <button id="zoomIn" class="zoom-control" type="button" aria-label="Perbesar" title="Perbesar"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></button>
+      <button id="zoomReset" class="zoom-control" type="button" aria-label="Kembali ke ukuran semula" title="Reset zoom"><svg viewBox="0 0 24 24"><path d="M3 9V4h5M21 15v5h-5M21 9V4h-5M3 15v5h5"/></svg></button>
+    </div>
+  </div>
 </main>
 <div id="flyer-data" hidden>
   {% assign flyer_files = site.static_files | where: 'flyer', true | sort: 'name' %}
@@ -173,6 +202,121 @@ button{font:inherit}
     const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
     byId('fullscreen').setAttribute('aria-label', active ? 'Keluar layar penuh' : 'Layar penuh');
   }
+
+  // Zoom berlapis: baca flyer penuh; cubit dua jari, geser saat zoom, double-tap, roda mouse, tombol +/-
+  const zoomOverlay = byId('zoomOverlay'), zoomStage = byId('zoomStage'), zoomImage = byId('zoomImage');
+  const touches = new Map();
+  let zoomScale = 1, zoomX = 0, zoomY = 0, zoomGesture = null, previousTap = null;
+  const clamp = (v,min,max) => Math.min(max,Math.max(min,v));
+  function limitZoomPosition(){
+    const bx = Math.max(0,(zoomImage.offsetWidth * zoomScale - zoomStage.clientWidth)/2);
+    const by = Math.max(0,(zoomImage.offsetHeight * zoomScale - zoomStage.clientHeight)/2);
+    zoomX = clamp(zoomX,-bx,bx);
+    zoomY = clamp(zoomY,-by,by);
+  }
+  function displayZoom(){
+    limitZoomPosition();
+    zoomImage.style.transform = 'translate3d('+zoomX+'px,'+zoomY+'px,0) scale('+zoomScale+')';
+    byId('zoomLevel').textContent = Math.round(zoomScale*100)+'%';
+    byId('zoomOut').disabled = zoomScale<=1.001;
+    byId('zoomIn').disabled = zoomScale>=5.999;
+  }
+  function zoomTo(next,clientX,clientY){
+    const rect = zoomStage.getBoundingClientRect();
+    const fx = (clientX === undefined ? rect.left + rect.width/2 : clientX) - rect.left - rect.width/2;
+    const fy = (clientY === undefined ? rect.top + rect.height/2 : clientY) - rect.top - rect.height/2;
+    const old = zoomScale;
+    zoomScale = clamp(next,1,6);
+    const factor = zoomScale/old;
+    zoomX = fx-(fx-zoomX)*factor;
+    zoomY = fy-(fy-zoomY)*factor;
+    displayZoom();
+  }
+  function openZoom(pageIndex){
+    if(busy || !items[pageIndex])return;
+    touches.clear(); zoomGesture=null; previousTap=null;
+    zoomScale=1; zoomX=0; zoomY=0;
+    zoomImage.src=items[pageIndex];
+    zoomImage.alt='Flyer promo halaman '+(pageIndex+1);
+    zoomOverlay.hidden=false;
+    displayZoom();
+  }
+  function closeZoom(){
+    zoomOverlay.hidden=true;
+    zoomImage.removeAttribute('src');
+    touches.clear(); zoomGesture=null; previousTap=null;
+  }
+  function currentFlyer(){
+    if(mobile)return index;
+    return Math.min(index*2,items.length-1);
+  }
+  byId('zoomTrigger').addEventListener('click',()=>openZoom(currentFlyer()));
+  byId('zoomClose').addEventListener('click',closeZoom);
+  byId('zoomIn').addEventListener('click',()=>zoomTo(zoomScale*1.5));
+  byId('zoomOut').addEventListener('click',()=>zoomTo(zoomScale/1.5));
+  byId('zoomReset').addEventListener('click',()=>{zoomScale=1;zoomX=zoomY=0;displayZoom()});
+  zoomImage.addEventListener('load',()=>{if(!zoomOverlay.hidden)displayZoom()});
+  zoomStage.addEventListener('wheel',event=>{
+    if(zoomOverlay.hidden)return;
+    event.preventDefault();
+    zoomTo(zoomScale * Math.exp(-event.deltaY*.002),event.clientX,event.clientY);
+  },{passive:false});
+  function midpoint(a,b){return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}}
+  function distance(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+  zoomStage.addEventListener('pointerdown',event=>{
+    if(zoomOverlay.hidden || (event.pointerType==='mouse'&&event.button!==0))return;
+    event.preventDefault();
+    try{zoomStage.setPointerCapture(event.pointerId)}catch(e){}
+    touches.set(event.pointerId,{x:event.clientX,y:event.clientY,sx:event.clientX,sy:event.clientY,time:Date.now()});
+    if(touches.size>=2){
+      const [a,b]=Array.from(touches.values());
+      zoomGesture={kind:'pinch',startScale:zoomScale,startX:zoomX,startY:zoomY,startMid:midpoint(a,b),startDist:Math.max(distance(a,b),1)};
+      previousTap=null;
+    }else zoomGesture={kind:'pan',startX:event.clientX,startY:event.clientY,tx:zoomX,ty:zoomY};
+  });
+  zoomStage.addEventListener('pointermove',event=>{
+    if(!touches.has(event.pointerId))return;
+    const t=touches.get(event.pointerId);
+    t.x=event.clientX; t.y=event.clientY;
+    if(touches.size>=2&&zoomGesture?.kind==='pinch'){
+      const [a,b]=Array.from(touches.values());
+      const mid=midpoint(a,b);
+      const newScale=clamp(zoomGesture.startScale*distance(a,b)/zoomGesture.startDist,1,6);
+      const ratio=newScale/zoomGesture.startScale;
+      const rect=zoomStage.getBoundingClientRect();
+      const ox=zoomGesture.startMid.x-rect.left-rect.width/2;
+      const oy=zoomGesture.startMid.y-rect.top-rect.height/2;
+      zoomScale=newScale;
+      zoomX=(mid.x-rect.left-rect.width/2)-(ox-zoomGesture.startX)*ratio;
+      zoomY=(mid.y-rect.top-rect.height/2)-(oy-zoomGesture.startY)*ratio;
+      displayZoom();
+    }else if(touches.size===1&&zoomGesture?.kind==='pan'&&zoomScale>1){
+      zoomX=zoomGesture.tx+event.clientX-zoomGesture.startX;
+      zoomY=zoomGesture.ty+event.clientY-zoomGesture.startY;
+      displayZoom();
+    }
+  });
+  function endPointer(event){
+    if(!touches.has(event.pointerId))return;
+    const t=touches.get(event.pointerId);
+    const wasSingle=touches.size===1&&zoomGesture?.kind==='pan';
+    touches.delete(event.pointerId);
+    if(wasSingle&&event.type==='pointerup'&&event.pointerType==='touch'&&Math.hypot(event.clientX-t.sx,event.clientY-t.sy)<14&&Date.now()-t.time<330){
+      const now=Date.now();
+      if(previousTap&&now-previousTap.time<340&&Math.hypot(event.clientX-previousTap.x,event.clientY-previousTap.y)<45){
+        zoomTo(zoomScale>1.1?1:2.5,event.clientX,event.clientY);
+        previousTap=null;
+      }else previousTap={time:now,x:event.clientX,y:event.clientY};
+    }
+    if(touches.size===1){
+      const [rest]=Array.from(touches.values());
+      zoomGesture={kind:'pan',startX:rest.x,startY:rest.y,tx:zoomX,ty:zoomY};
+    }else if(!touches.size)zoomGesture=null;
+  }
+  zoomStage.addEventListener('pointerup',endPointer);
+  zoomStage.addEventListener('pointercancel',endPointer);
+  window.addEventListener('resize',()=>{if(!zoomOverlay.hidden)displayZoom()});
+
   byId('prev').addEventListener('click',()=>turn(-1));
   byId('next').addEventListener('click',()=>turn(1));
   byId('fullscreen').addEventListener('click',toggleFullscreen);
@@ -197,8 +341,15 @@ button{font:inherit}
     const relativeX = event.clientX / window.innerWidth;
     if(relativeX < .22)turn(-1);
     else if(relativeX > .78)turn(1);
+    else openZoom(mobile ? index : index*2+(relativeX>=.5?1:0));
   });
   document.addEventListener('keydown',event=>{
+    if(!zoomOverlay.hidden){
+      if(event.key==='Escape'){event.preventDefault();closeZoom()}
+      else if(event.key==='+'||event.key==='='){event.preventDefault();zoomTo(zoomScale*1.5)}
+      else if(event.key==='-'){event.preventDefault();zoomTo(zoomScale/1.5)}
+      return;
+    }
     if(event.key === 'ArrowRight'){event.preventDefault();turn(1)}
     if(event.key === 'ArrowLeft'){event.preventDefault();turn(-1)}
     if(event.key === 'Home'){index=0;render()}
