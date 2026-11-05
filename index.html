@@ -7,13 +7,26 @@ layout: null
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#141514">
-<meta name="description" content="Katalog promo AIO Store. Geser halaman untuk melihat flyer terbaru.">
+<!-- Deskripsi untuk Google -->
+<meta name="description" content="🏁 Undian Mobil BYD di AIO Store HAMPIR SELESAI! COMEBACK DEAL: DOUBLE KUPON di toko terdekat & TRIPLE KUPON di Paskal 23 Bandung 23-29 Nov. Min. belanja 3jt.">
+
+<!-- OG Tags Biar di WA Jadi Kartu Kayak Jadwalkan Meeting -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Katalog Promo AIO Store">
-<meta property="og:description" content="Buka dan geser halaman katalog promo AIO Store.">
-<meta property="og:image" content="{{ '/assets/preview-wa.jpg' | absolute_url }}">
+<meta property="og:url" content="https://katalog.retailaio.web.id/">
+<meta property="og:title" content="🎁 COMEBACK DEAL - Triple Kupon Paskal 23 | AIO Store">
+<meta property="og:description" content="🏁 Undian Mobil BYD HAMPIR SELESAI! Tunjukkan pesan ini: DOUBLE KUPON di AIO terdekat & TRIPLE KUPON di Paskal 23 Bandung (23-29 Nov). Min. belanja 3jt. Khusus customer eksklusif.">
+<!-- PENTING: Ganti gambar ini pakai flyer BYD yang paling bagus, mas pakai 01_feed1.png dulu -->
+<meta property="og:image" content="https://katalog.retailaio.web.id/flyers/01_feed1.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="AIO Store Katalog">
+
 <meta name="twitter:card" content="summary_large_image">
-<title>Katalog AIO Store</title>
+<meta name="twitter:title" content="🎁 COMEBACK DEAL - Triple Kupon Paskal 23">
+<meta name="twitter:description" content="DOUBLE & TRIPLE Kupon Undian Mobil BYD - Min. 3jt di Paskal 23">
+<meta name="twitter:image" content="https://katalog.retailaio.web.id/flyers/01_feed1.png">
+
+<title>Katalog AIO Store - COMEBACK DEAL BYD</title>
 <style>
 :root{color-scheme:dark}
 *{box-sizing:border-box}
@@ -56,7 +69,6 @@ button{font:inherit}
   .corner#fullscreen{width:40px;height:40px;opacity:.50}
 }
 @media(prefers-reduced-motion:reduce){#turner.next,#turner.prev{animation-duration:.01ms}}
-
 [hidden]{display:none!important}
 #zoomOverlay{position:absolute;inset:0;z-index:30;background:#0a0b0a;overflow:hidden;touch-action:none}
 #zoomStage{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none;overscroll-behavior:none;cursor:grab}
@@ -92,7 +104,6 @@ button{font:inherit}
   <p id="empty">Belum ada flyer di folder <strong>flyers</strong>.</p>
   <div id="message" role="status"></div>
   <span id="status" class="visually-hidden" aria-live="polite"></span>
-
   <button id="zoomTrigger" class="corner" type="button" aria-label="Perbesar flyer" title="Perbesar flyer">
     <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M10.5 8v5M8 10.5h5"/></svg>
   </button>
@@ -202,8 +213,6 @@ button{font:inherit}
     const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
     byId('fullscreen').setAttribute('aria-label', active ? 'Keluar layar penuh' : 'Layar penuh');
   }
-
-  // Zoom berlapis: baca flyer penuh; cubit dua jari, geser saat zoom, double-tap, roda mouse, tombol +/-
   const zoomOverlay = byId('zoomOverlay'), zoomStage = byId('zoomStage'), zoomImage = byId('zoomImage');
   const touches = new Map();
   let zoomScale = 1, zoomX = 0, zoomY = 0, zoomGesture = null, previousTap = null;
@@ -316,7 +325,6 @@ button{font:inherit}
   zoomStage.addEventListener('pointerup',endPointer);
   zoomStage.addEventListener('pointercancel',endPointer);
   window.addEventListener('resize',()=>{if(!zoomOverlay.hidden)displayZoom()});
-
   byId('prev').addEventListener('click',()=>turn(-1));
   byId('next').addEventListener('click',()=>turn(1));
   byId('fullscreen').addEventListener('click',toggleFullscreen);
